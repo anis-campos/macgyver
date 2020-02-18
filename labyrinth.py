@@ -58,12 +58,12 @@ class Labyrinth:
         else:
             raise Exception("Unknown cell type")
 
-    def load(self, filename):
-        with open(filename) as f:
+    def load(self, file_name: str):
+        with open(file_name) as f:
             content = f.read().splitlines()
         self.nb_row = len(content)
         self.nb_col = len(content[0])
-        self.mazeMap = [Cell(x=i, y=j, cell_type=self.parse(col)) for i, line in enumerate(content) for j, col in
+        self.mazeMap = [Cell(x=j, y=i, cell_type=self.parse(col)) for i, line in enumerate(content) for j, col in
                         enumerate(line)]
         self.start = [a for a in self.mazeMap if a.type == CellType.START].pop()
         self.end = [a for a in self.mazeMap if a.type == CellType.END].pop()
