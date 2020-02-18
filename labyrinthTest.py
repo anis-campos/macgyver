@@ -6,6 +6,7 @@ class LabyrinthTestCase(unittest.TestCase):
     def test_can_load_file(self):
         labyrinth = Labyrinth()
         labyrinth.load('./level_1')
+        assert len(labyrinth.mazeMap) > 0
         assert labyrinth.nb_col == 37
         assert labyrinth.nb_row == 23
         assert labyrinth.start.x == 22

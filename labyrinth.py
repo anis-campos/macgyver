@@ -27,7 +27,8 @@ class Labyrinth:
         :param nb_row:
         :type nb_row: int
         :param nb_col: int
-        :param maze: list
+        :param maze: Map of the labyrinth
+        :type maze: list of Cell
         :param start: Begin position of player
         :type start: Cell
         :param end: End game position
@@ -35,7 +36,7 @@ class Labyrinth:
         """
         self.nb_row = nb_row
         self.nb_col = nb_col
-        self.maze = maze
+        self.mazeMap = maze
         self.start = start
         self.end = end
 
@@ -62,7 +63,7 @@ class Labyrinth:
             content = f.read().splitlines()
         self.nb_row = len(content)
         self.nb_col = len(content[0])
-        self.maze = [Cell(x=i, y=j, cell_type=self.parse(col)) for i, line in enumerate(content) for j, col in
-                     enumerate(line)]
-        self.start = [a for a in self.maze if a.type == CellType.START].pop()
-        self.end = [a for a in self.maze if a.type == CellType.END].pop()
+        self.mazeMap = [Cell(x=i, y=j, cell_type=self.parse(col)) for i, line in enumerate(content) for j, col in
+                        enumerate(line)]
+        self.start = [a for a in self.mazeMap if a.type == CellType.START].pop()
+        self.end = [a for a in self.mazeMap if a.type == CellType.END].pop()
