@@ -1,6 +1,11 @@
 import pygame
+from pygame.sprite import Group
 
-from gui import BLUE
+from gui import BLUE, BLOCK_SIZE
+from gui.tiles.floor import Floor
+from gui.tiles.floor_type import FloorType
+from gui.tiles.wall import Wall
+from model.labyrinth import Labyrinth, CellType
 
 
 class Level:
@@ -8,17 +13,41 @@ class Level:
         Create a child class for each level with level-specific
         info. """
 
-    def __init__(self):
-        """ Constructor. Pass in a handle to player. """
+    lab: Labyrinth
 
-        # Lists of sprites used in all levels. Add or remove
-        # lists as needed for your game.
-        self.cell_list = None
+    """
+         Lists of sprites used in all levels. 
+    """
+    cell_list: Group
+
+    def __init__(self, level_file_name: str = None):
+        """ Constructor. Pass in a handle to player. """
 
         # Background image
         self.background = None
 
         self.cell_list = pygame.sprite.Group()
+
+        # Loading level file
+        self.lab = Labyrinth()
+        self.lab.load(level_file_name)
+
+        # Go through the array above and add platforms
+        for cell in self.lab.mazeMap:
+
+            if cell.type == CellType.WALL:
+                cell_gui = Wall()
+            elif cell.type == CellType.HALL:
+                cell_gui = Floor()
+            elif cell.type == CellType.START:
+                cell_gui = Floor(floor_type=FloorType.START)
+            elif cell.type == CellType.END:
+                cell_gui = Floor(floor_type=FloorType.END)
+            else:
+                continue
+            cell_gui.rect.x = cell.x * BLOCK_SIZE
+            cell_gui.rect.y = cell.y * BLOCK_SIZE
+            self.cell_list.add(cell_gui)
 
     # Update everythign on this level
     def update(self):
@@ -35,3 +64,11 @@ class Level:
 
         # Draw all the sprite lists that we have
         self.cell_list.draw(screen)
+
+    __walls: list = None
+
+    @property
+    def walls(self):
+        if self.__walls is None:
+            self.__walls = [cell for cell in self.cell_list if isinstance(cell, Wall)]
+        return self.__walls
