@@ -3,124 +3,102 @@ from typing import List
 
 import pygame
 
-from gui import SCREEN_HEIGHT, SCREEN_WIDTH
 from gui.guardian import Guardian
 from gui.level.level import Level
 from gui.level.level01 import Level01
 from gui.player import Player
 from gui.tiles.item import Item, ItemType
-from gui.window_specific import window_on_top
 from model.labyrinth import Tile
 
 
-def end_game(player: Player, guardian: Guardian):
-    if abs(player.tile.x - guardian.tile.x) + abs(player.tile.y - guardian.tile.y) == 1:
-        print("game over")
+class Game:
 
+    def __init__(self):
+        # Set the current level
+        self.current_level: Level = Level01()
+        # Create the player
+        self.player = Player(self.current_level.start.tile)
+        self.guardian = Guardian(self.current_level.guardian)
+        self.characters = pygame.sprite.Group()
+        self.items = pygame.sprite.Group()
+        self.item_tiles: List[Tile] = [tile_gui.tile for tile_gui in random.sample(self.current_level.floors, 3)]
+        self.needle = Item(self.item_tiles[0], ItemType.NEEDLE)
+        self.pipe = Item(self.item_tiles[1], ItemType.PLASTIC_PIPE)
+        self.ether = Item(self.item_tiles[2], ItemType.ETHER)
+        self.items.add(self.needle, self.pipe, self.ether)
+        self.characters.add(self.guardian, self.player)
+        # Loop until the user clicks the close button.
+        self.done = False
+        # Used to manage how fast the screen updates
+        self.clock = pygame.time.Clock()
 
-def item_detection(player:Player, items):
-    block_hit_list: List[Item] = pygame.sprite.spritecollide(player, items, False)
-    for block in block_hit_list:
-        player.take_item(block.item_type)
-        items.remove(block)
-        print('On item {}'.format(block.item_type))
+    def collision_handler(self):
+        block_hit_list = pygame.sprite.spritecollide(self.player, self.current_level.walls, False)
+        if len(block_hit_list) > 0:
+            self.player.hit_wall(block_hit_list[0])
 
+    def end_game(self):
+        if abs(self.player.tile.x - self.guardian.tile.x) + abs(self.player.tile.y - self.guardian.tile.y) == 1:
+            print("game over")
 
-def main():
-    """ Main Program """
-    pygame.init()
+    def item_detection(self):
+        block_hit_list: List[Item] = pygame.sprite.spritecollide(self.player, self.items, False)
+        for block in block_hit_list:
+            self.player.take_item(block.item_type)
+            self.items.remove(block)
+            print('On item {}'.format(block.item_type))
 
-    # Set the height and width of the screen
-    size = [SCREEN_WIDTH, SCREEN_HEIGHT]
-    screen = pygame.display.set_mode(size)
+    def out_of_game(self):
+        if self.player.change_x > 0 and self.player.tile.x == self.current_level.width - 1 \
+                or self.player.change_x < 0 and self.player.tile.x == 0 \
+                or self.player.change_y < 0 and self.player.tile.x == 0 \
+                or self.player.change_y > 0 and self.player.tile.y == self.current_level.height - 1:
+            self.player.stop()
+            print('trying to get out of game')
 
-    window_on_top(pygame.display.get_wm_info()['window'])
+    def game_loop(self, screen):
 
-    pygame.display.set_caption("Platformer with sprite sheets")
+        # -------- Main Program Loop -----------
+        while not self.done:
+            pygame.time.delay(100)
+            for event in pygame.event.get():  # User did something
+                if event.type == pygame.QUIT:  # If user clicked close
+                    self.done = True  # Flag that we are done so we exit this loop
+                if event.type == pygame.KEYUP:
+                    if event.key in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN]:
+                        self.player.stop()
 
-    # Set the current level
-    current_level: Level = Level01()
+            pressed_keys = pygame.key.get_pressed()
 
-    # Create the player
-    player = Player(Tile(current_level.guardian.x, current_level.guardian.y + 1))
+            if pressed_keys[pygame.K_LEFT]:
+                self.player.go_left()
+            if pressed_keys[pygame.K_RIGHT]:
+                self.player.go_right()
+            if pressed_keys[pygame.K_UP]:
+                self.player.go_up()
+            if pressed_keys[pygame.K_DOWN]:
+                self.player.go_down()
 
-    guardian = Guardian(current_level.guardian)
+            self.out_of_game()
 
-    characters = pygame.sprite.Group()
-    items = pygame.sprite.Group()
+            self.characters.update()
+            self.current_level.update()
 
-    item_tiles: List[Tile] = [tile_gui.tile for tile_gui in random.sample(current_level.floors, 3)]
+            self.end_game()
 
-    needle = Item(item_tiles[0], ItemType.NEEDLE)
-    pipe = Item(item_tiles[1], ItemType.PLASTIC_PIPE)
-    ether = Item(item_tiles[2], ItemType.ETHER)
+            self.item_detection()
 
-    items.add(needle, pipe, ether)
+            self.collision_handler()
 
-    characters.add(guardian, player)
+            # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
+            self.current_level.draw(screen)
+            self.items.draw(screen)
+            self.characters.draw(screen)
 
-    # Loop until the user clicks the close button.
-    done = False
+            # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
 
-    # Used to manage how fast the screen updates
-    clock = pygame.time.Clock()
+            # Limit to 60 frames per second
+            self.clock.tick(60)
 
-    # -------- Main Program Loop -----------
-    while not done:
-        pygame.time.delay(100)
-        for event in pygame.event.get():  # User did something
-            if event.type == pygame.QUIT:  # If user clicked close
-                done = True  # Flag that we are done so we exit this loop
-            if event.type == pygame.KEYUP:
-                if event.key in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN]:
-                    player.stop()
-
-        pressed_keys = pygame.key.get_pressed()
-
-        if pressed_keys[pygame.K_LEFT]:
-            player.go_left()
-        if pressed_keys[pygame.K_RIGHT]:
-            player.go_right()
-        if pressed_keys[pygame.K_UP]:
-            player.go_up()
-        if pressed_keys[pygame.K_DOWN]:
-            player.go_down()
-
-        # Update the player.
-        characters.update()
-
-        # Update items in the level
-        current_level.update()
-
-        end_game(player, guardian)
-
-        item_detection(player, items)
-
-        collision_handler(current_level, player)
-
-        # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
-        current_level.draw(screen)
-        items.draw(screen)
-        characters.draw(screen)
-
-        # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
-
-        # Limit to 60 frames per second
-        clock.tick(60)
-
-        # Go ahead and update the screen with what we've drawn.
-        pygame.display.flip()
-
-    # Be IDLE friendly. If you forget this line, the program will 'hang'
-    # on exit.
-    pygame.quit()
-
-
-def collision_handler(current_level, player):
-    block_hit_list = pygame.sprite.spritecollide(player, current_level.walls, False)
-    if len(block_hit_list) > 0:
-        player.hit_wall(block_hit_list[0])
-
-
-if __name__ == "__main__":
-    main()
+            # Go ahead and update the screen with what we've drawn.
+            pygame.display.flip()

@@ -2,7 +2,7 @@ import os
 
 from common.Singleton import Singleton
 from gui.images.spritesheet import SpriteSheet
-from main import ROOT_DIR
+from conf import ROOT_DIR
 
 SHEET_PLAYER_PATH = os.path.join(ROOT_DIR, 'resources', 'sprites', 'MacGyver.png')
 SHEET_GUARDIAN_PATH = os.path.join(ROOT_DIR, 'resources', 'sprites', 'Gardien.png')
