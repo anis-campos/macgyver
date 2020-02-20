@@ -4,6 +4,7 @@ from termcolor import colored
 from gui import BLOCK_SIZE
 from gui.tiles.character import Character, CharacterType
 from gui.tiles.wall import Wall
+from model.labyrinth import Tile
 
 
 class Player(Character):
@@ -18,6 +19,7 @@ class Player(Character):
     def update(self):
         self.rect.x += self.change_x
         self.rect.y += self.change_y
+        self.tile = Tile(self.rect.x / BLOCK_SIZE, self.rect.y/ BLOCK_SIZE)
 
     def go_left(self):
         self.change_x = -BLOCK_SIZE
@@ -52,5 +54,5 @@ class Player(Character):
         elif self.change_y < 0:
             # Otherwise if we are moving left, do the opposite.
             self.rect.top = block.bottom
-
+        self.tile = Tile(self.rect.x / BLOCK_SIZE, self.rect.y / BLOCK_SIZE)
         self.stop()

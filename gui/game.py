@@ -13,6 +13,11 @@ from gui.window_specific import window_on_top
 from model.labyrinth import Tile
 
 
+def end_game(player: Player, guardian: Guardian):
+    if abs(player.tile.x - guardian.tile.x) + abs(player.tile.y - guardian.tile.y) == 1:
+        print("game over")
+
+
 def main():
     """ Main Program """
     pygame.init()
@@ -29,14 +34,14 @@ def main():
     current_level: Level = Level01()
 
     # Create the player
-    player = Player(current_level.start.tile)
+    player = Player(Tile(current_level.guardian.x,current_level.guardian.y+1))
 
     guardian = Guardian(current_level.guardian)
 
     active_sprite_list = pygame.sprite.Group()
     items = pygame.sprite.Group()
 
-    item_tiles: List[Tile] = [tile_gui.tile for tile_gui in random.sample(current_level.floors,3)]
+    item_tiles: List[Tile] = [tile_gui.tile for tile_gui in random.sample(current_level.floors, 3)]
 
     needle = Item(item_tiles[0], ItemType.NEEDLE)
     pipe = Item(item_tiles[1], ItemType.PLASTIC_PIPE)
@@ -78,6 +83,8 @@ def main():
 
         # Update items in the level
         current_level.update()
+
+        end_game(player, guardian)
 
         collision_handler(current_level, player)
 
