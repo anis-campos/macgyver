@@ -1,8 +1,8 @@
+from gui.images.sprite import Sprite
+from gui.images.spritesheet import SpriteSheet
 from gui.resource.tile_mapping import WALL_DEFAULT
 from gui.tiles.tile import Tile
 from gui.tiles.wall_type import WallType
-from gui.images.sprite import Sprite
-from gui.images.spritesheet import SpriteSheet
 
 
 class Wall(Tile):

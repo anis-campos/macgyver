@@ -1,6 +1,6 @@
 from common.Singleton import Singleton
-from gui.resource import *
 from gui.images.spritesheet import SpriteSheet
+from gui.resource import *
 
 
 class ResourceLoader(metaclass=Singleton):

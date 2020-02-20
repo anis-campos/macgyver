@@ -1,10 +1,10 @@
+from ctypes import windll, Structure, c_long, byref  # windows only
+
 import pygame
 
-from gui import BLOCK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH
+from gui import SCREEN_HEIGHT, SCREEN_WIDTH
 from gui.level.level01 import Level01
 from gui.player import Player
-
-from ctypes import windll, Structure, c_long, byref  # windows only
 
 
 class RECT(Structure):

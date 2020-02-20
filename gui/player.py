@@ -1,10 +1,9 @@
 import pygame
-
-from gui import BLOCK_SIZE
-from gui.resource.loaders import ResourceLoader
-from gui.images.sprite import Sprite
 from termcolor import colored
 
+from gui import BLOCK_SIZE
+from gui.images.sprite import Sprite
+from gui.resource.loaders import ResourceLoader
 from gui.tiles.wall import Wall
 
 MACGYVER = Sprite(0, 0, 43, 32)
@@ -49,7 +48,7 @@ class Player(pygame.sprite.Sprite):
         self.change_y = 0
 
     def hit_wall(self, wall: Wall):
-        print (colored('player at {} hit wall at  {}'.format(self.rect, wall),'red'))
+        print(colored('player at {} hit wall at  {}'.format(self.rect, wall), 'red'))
         block = wall.rect
         if self.change_x > 0:
             self.rect.right = block.left

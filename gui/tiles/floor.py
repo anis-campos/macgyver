@@ -1,8 +1,8 @@
-from gui.resource.tile_mapping import FLOOR_DEFAULT, FLOOR_START, FLOOR_END
-from gui.tiles.tile import Tile
-from gui.tiles.floor_type import FloorType
 from gui.images.sprite import Sprite
 from gui.images.spritesheet import SpriteSheet
+from gui.resource.tile_mapping import FLOOR_DEFAULT, FLOOR_START, FLOOR_END
+from gui.tiles.floor_type import FloorType
+from gui.tiles.tile import Tile
 
 
 class Floor(Tile):

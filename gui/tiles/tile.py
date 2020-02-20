@@ -5,9 +5,9 @@ Module for managing platforms.
 import pygame
 
 from gui import BLOCK_SIZE
-from gui.resource.loaders import ResourceLoader
 from gui.images.sprite import Sprite
 from gui.images.spritesheet import SpriteSheet
+from gui.resource.loaders import ResourceLoader
 
 
 class Tile(pygame.sprite.Sprite):
