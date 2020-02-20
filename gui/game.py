@@ -1,11 +1,16 @@
+import random
 from ctypes import windll, Structure, c_long, byref  # windows only
+from typing import List
 
 import pygame
 
 from gui import SCREEN_HEIGHT, SCREEN_WIDTH
 from gui.guardian import Guardian
+from gui.level.level import Level
 from gui.level.level01 import Level01
 from gui.player import Player
+from gui.tiles.item import Item, ItemType
+from model.labyrinth import Tile
 
 
 class RECT(Structure):
@@ -42,7 +47,7 @@ def main():
     pygame.display.set_caption("Platformer with sprite sheets")
 
     # Set the current level
-    current_level = Level01()
+    current_level: Level = Level01()
 
     # Create the player
     player = Player(current_level.start.tile)
@@ -50,6 +55,15 @@ def main():
     guardian = Guardian(current_level.guardian)
 
     active_sprite_list = pygame.sprite.Group()
+    items = pygame.sprite.Group()
+
+    item_tiles: List[Tile] = [tile_gui.tile for tile_gui in random.sample(current_level.floors,3)]
+
+    needle = Item(item_tiles[0], ItemType.NEEDLE)
+    pipe = Item(item_tiles[1], ItemType.PLASTIC_PIPE)
+    ether = Item(item_tiles[2], ItemType.ETHER)
+
+    items.add(needle, pipe, ether)
 
     active_sprite_list.add(player, guardian)
 
@@ -91,6 +105,7 @@ def main():
         # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
         current_level.draw(screen)
         active_sprite_list.draw(screen)
+        items.draw(screen)
 
         # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
 

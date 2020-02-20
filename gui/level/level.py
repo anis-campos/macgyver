@@ -35,6 +35,9 @@ class Level:
         self._labyrinth = Labyrinth()
         self._labyrinth.load(level_file_name)
 
+        self.width = self._labyrinth.nb_col
+        self.height = self._labyrinth.nb_row
+
         # Go through the array above and add platforms
         for tile in self._labyrinth.mazeMap:
             if tile.type == TileType.WALL:

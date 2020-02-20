@@ -13,7 +13,7 @@ class ItemType(Enum):
     ETHER = 3
 
 
-class Character(TileGui):
+class Item(TileGui):
 
     def __init__(self, tile: Tile, item_type: ItemType):
         self.item_type = item_type
