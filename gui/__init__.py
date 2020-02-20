@@ -9,6 +9,6 @@ BLUE = (0, 0, 255)
 
 # Screen dimensions
 SCREEN_WIDTH = 740
-SCREEN_HEIGHT = 460
+SCREEN_HEIGHT = 600
 
 BLOCK_SIZE = 20
