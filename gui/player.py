@@ -49,7 +49,7 @@ class Player(pygame.sprite.Sprite):
         self.change_y = 0
 
     def hit_wall(self, wall: Wall):
-        print (colored('player at {} hit wall at  {}'.format(self.rect, wall,'red')))
+        print (colored('player at {} hit wall at  {}'.format(self.rect, wall),'red'))
         block = wall.rect
         if self.change_x > 0:
             self.rect.right = block.left
