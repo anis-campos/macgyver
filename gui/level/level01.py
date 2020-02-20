@@ -17,7 +17,7 @@ class Level01(Level):
 
         # Array with type of platform, and x, y location of the platform.
         self.lab = Labyrinth()
-        self.lab.load('../level_1')
+        self.lab.load('../resources/level_1')
 
         # Go through the array above and add platforms
         for cell in self.lab.mazeMap:
