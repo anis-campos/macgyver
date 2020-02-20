@@ -1,3 +1,5 @@
+
+
 import pygame
 from termcolor import colored
 
@@ -13,6 +15,7 @@ class Player(Character):
     def __init__(self, tile):
         super().__init__(tile, CharacterType.PLAYER)
 
+        self.items = set()
         self.change_y = 0
         self.change_x = 0
 
@@ -56,3 +59,6 @@ class Player(Character):
             self.rect.top = block.bottom
         self.tile = Tile(self.rect.x / BLOCK_SIZE, self.rect.y / BLOCK_SIZE)
         self.stop()
+
+    def take_item(self, item_type):
+        self.items.add(item_type)

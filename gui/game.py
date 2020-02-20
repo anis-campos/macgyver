@@ -18,10 +18,12 @@ def end_game(player: Player, guardian: Guardian):
         print("game over")
 
 
-def item_detection(player, items):
-    block_hit_list : List[Item] = pygame.sprite.spritecollide(player, items, False)
-    if len(block_hit_list) > 0:
-        print('On item {}'.format(block_hit_list[0].item_type))
+def item_detection(player:Player, items):
+    block_hit_list: List[Item] = pygame.sprite.spritecollide(player, items, False)
+    for block in block_hit_list:
+        player.take_item(block.item_type)
+        items.remove(block)
+        print('On item {}'.format(block.item_type))
 
 
 def main():
@@ -92,7 +94,7 @@ def main():
 
         end_game(player, guardian)
 
-        item_detection(player,items)
+        item_detection(player, items)
 
         collision_handler(current_level, player)
 
