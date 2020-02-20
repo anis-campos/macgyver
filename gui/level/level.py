@@ -1,7 +1,9 @@
+from typing import List
+
 import pygame
 from pygame.sprite import Group
 
-from gui import BLUE, BLOCK_SIZE
+from gui import BLUE
 from gui.tiles.floor import Floor
 from gui.tiles.floor_type import FloorType
 from gui.tiles.wall import Wall
@@ -40,10 +42,10 @@ class Level:
             elif tile.type == TileType.HALL:
                 tile_gui = Floor(tile)
             elif tile.type == TileType.START:
-                tile_gui = Floor(tile,floor_type=FloorType.START)
+                tile_gui = Floor(tile, floor_type=FloorType.START)
                 self.start = tile_gui
             elif tile.type == TileType.END:
-                tile_gui = Floor(tile,floor_type=FloorType.END)
+                tile_gui = Floor(tile, floor_type=FloorType.END)
                 self.end = tile_gui
             else:
                 continue
@@ -66,10 +68,18 @@ class Level:
         # Draw all the sprite lists that we have
         self.tile_list.draw(screen)
 
-    _walls: list = None
+    _walls: List[Wall] = None
 
     @property
-    def walls(self):
+    def walls(self) -> List[Wall]:
         if self._walls is None:
             self._walls = [tile for tile in self.tile_list if isinstance(tile, Wall)]
         return self._walls
+
+    _floors: List[Floor] = None
+
+    @property
+    def floors(self) -> List[Floor]:
+        if self._floors is None:
+            self._floors = [tile for tile in self.tile_list if isinstance(tile, Floor)]
+        return self._floors
