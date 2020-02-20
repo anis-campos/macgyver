@@ -33,10 +33,7 @@ class TileGui(pygame.sprite.Sprite):
         self.loader = ResourceLoader()
 
         # Grab the image for this tiles
-        self.image = self.sprite_sheet.get_image(self.sprite.x,
-                                                 self.sprite.y,
-                                                 self.sprite.width,
-                                                 self.sprite.height)
+        self.image = self.sprite_sheet.get_image_from_sprite(self.sprite)
         self.image = pygame.transform.scale(self.image, (BLOCK_SIZE, BLOCK_SIZE))
         self.rect = self.image.get_rect()
         self.rect.x = tile.x * BLOCK_SIZE

@@ -8,3 +8,7 @@ WALL_DEFAULT = Sprite(40, 140, 20, 20)
 
 MACGYVER = Sprite(0, 0, 32, 43)
 GUARDIAN = Sprite(0, 0, 32, 36)
+
+NEEDLE = Sprite(0, 0, 545, 720)
+PLASTIC_PIPE = Sprite(0, 0, 259, 194)
+ETHER = Sprite(0, 0, 225, 225)
