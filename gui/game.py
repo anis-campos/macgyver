@@ -48,8 +48,8 @@ def main():
 
     active_sprite_list = pygame.sprite.Group()
 
-    player.rect.x = current_level.lab.start.x * BLOCK_SIZE
-    player.rect.y = current_level.lab.start.y * BLOCK_SIZE
+    player.rect = current_level.start.rect.copy()
+
     active_sprite_list.add(player)
 
     # Loop until the user clicks the close button.

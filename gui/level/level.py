@@ -13,7 +13,7 @@ class Level:
         Create a child class for each level with level-specific
         info. """
 
-    lab: Labyrinth
+    _labyrinth: Labyrinth
 
     """
          Lists of sprites used in all levels. 
@@ -23,17 +23,14 @@ class Level:
     def __init__(self, level_file_name: str = None):
         """ Constructor. Pass in a handle to player. """
 
-        # Background image
-        self.background = None
-
         self.cell_list = pygame.sprite.Group()
 
         # Loading level file
-        self.lab = Labyrinth()
-        self.lab.load(level_file_name)
+        self._labyrinth = Labyrinth()
+        self._labyrinth.load(level_file_name)
 
         # Go through the array above and add platforms
-        for cell in self.lab.mazeMap:
+        for cell in self._labyrinth.mazeMap:
 
             if cell.type == CellType.WALL:
                 cell_gui = Wall()
@@ -41,8 +38,10 @@ class Level:
                 cell_gui = Floor()
             elif cell.type == CellType.START:
                 cell_gui = Floor(floor_type=FloorType.START)
+                self.start = cell_gui
             elif cell.type == CellType.END:
                 cell_gui = Floor(floor_type=FloorType.END)
+                self.end = cell_gui
             else:
                 continue
             cell_gui.rect.x = cell.x * BLOCK_SIZE
@@ -65,10 +64,10 @@ class Level:
         # Draw all the sprite lists that we have
         self.cell_list.draw(screen)
 
-    __walls: list = None
+    _walls: list = None
 
     @property
     def walls(self):
-        if self.__walls is None:
-            self.__walls = [cell for cell in self.cell_list if isinstance(cell, Wall)]
-        return self.__walls
+        if self._walls is None:
+            self._walls = [cell for cell in self.cell_list if isinstance(cell, Wall)]
+        return self._walls
