@@ -18,6 +18,12 @@ def end_game(player: Player, guardian: Guardian):
         print("game over")
 
 
+def item_detection(player, items):
+    block_hit_list : List[Item] = pygame.sprite.spritecollide(player, items, False)
+    if len(block_hit_list) > 0:
+        print('On item {}'.format(block_hit_list[0].item_type))
+
+
 def main():
     """ Main Program """
     pygame.init()
@@ -34,11 +40,11 @@ def main():
     current_level: Level = Level01()
 
     # Create the player
-    player = Player(Tile(current_level.guardian.x,current_level.guardian.y+1))
+    player = Player(Tile(current_level.guardian.x, current_level.guardian.y + 1))
 
     guardian = Guardian(current_level.guardian)
 
-    active_sprite_list = pygame.sprite.Group()
+    characters = pygame.sprite.Group()
     items = pygame.sprite.Group()
 
     item_tiles: List[Tile] = [tile_gui.tile for tile_gui in random.sample(current_level.floors, 3)]
@@ -49,7 +55,7 @@ def main():
 
     items.add(needle, pipe, ether)
 
-    active_sprite_list.add(player, guardian)
+    characters.add(guardian, player)
 
     # Loop until the user clicks the close button.
     done = False
@@ -79,19 +85,21 @@ def main():
             player.go_down()
 
         # Update the player.
-        active_sprite_list.update()
+        characters.update()
 
         # Update items in the level
         current_level.update()
 
         end_game(player, guardian)
 
+        item_detection(player,items)
+
         collision_handler(current_level, player)
 
         # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
         current_level.draw(screen)
-        active_sprite_list.draw(screen)
         items.draw(screen)
+        characters.draw(screen)
 
         # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
 
