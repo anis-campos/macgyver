@@ -5,7 +5,7 @@ from gui import BLUE, BLOCK_SIZE
 from gui.tiles.floor import Floor
 from gui.tiles.floor_type import FloorType
 from gui.tiles.wall import Wall
-from model.labyrinth import Labyrinth, CellType
+from model.labyrinth import Labyrinth, TileType
 
 
 class Level:
@@ -18,40 +18,40 @@ class Level:
     """
          Lists of sprites used in all levels. 
     """
-    cell_list: Group
+    tile_list: Group
 
     def __init__(self, level_file_name: str = None):
         """ Constructor. Pass in a handle to player. """
 
-        self.cell_list = pygame.sprite.Group()
+        self.tile_list = pygame.sprite.Group()
 
         # Loading level file
         self._labyrinth = Labyrinth()
         self._labyrinth.load(level_file_name)
 
         # Go through the array above and add platforms
-        for cell in self._labyrinth.mazeMap:
+        for tile in self._labyrinth.mazeMap:
 
-            if cell.type == CellType.WALL:
-                cell_gui = Wall()
-            elif cell.type == CellType.HALL:
-                cell_gui = Floor()
-            elif cell.type == CellType.START:
-                cell_gui = Floor(floor_type=FloorType.START)
-                self.start = cell_gui
-            elif cell.type == CellType.END:
-                cell_gui = Floor(floor_type=FloorType.END)
-                self.end = cell_gui
+            if tile.type == TileType.WALL:
+                tile_gui = Wall()
+            elif tile.type == TileType.HALL:
+                tile_gui = Floor()
+            elif tile.type == TileType.START:
+                tile_gui = Floor(floor_type=FloorType.START)
+                self.start = tile_gui
+            elif tile.type == TileType.END:
+                tile_gui = Floor(floor_type=FloorType.END)
+                self.end = tile_gui
             else:
                 continue
-            cell_gui.rect.x = cell.x * BLOCK_SIZE
-            cell_gui.rect.y = cell.y * BLOCK_SIZE
-            self.cell_list.add(cell_gui)
+            tile_gui.rect.x = tile.x * BLOCK_SIZE
+            tile_gui.rect.y = tile.y * BLOCK_SIZE
+            self.tile_list.add(tile_gui)
 
     # Update everythign on this level
     def update(self):
         """ Update everything in this level."""
-        self.cell_list.update()
+        self.tile_list.update()
 
     def draw(self, screen):
         """ Draw everything on this level. """
@@ -62,12 +62,12 @@ class Level:
         screen.fill(BLUE)
 
         # Draw all the sprite lists that we have
-        self.cell_list.draw(screen)
+        self.tile_list.draw(screen)
 
     _walls: list = None
 
     @property
     def walls(self):
         if self._walls is None:
-            self._walls = [cell for cell in self.cell_list if isinstance(cell, Wall)]
+            self._walls = [tile for tile in self.tile_list if isinstance(tile, Wall)]
         return self._walls

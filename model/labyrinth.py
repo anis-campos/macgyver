@@ -1,7 +1,7 @@
 import enum
 
 
-class CellType(enum.Enum):
+class TileType(enum.Enum):
     """
     Enum representing type of tiles
     """
@@ -11,12 +11,12 @@ class CellType(enum.Enum):
     END = 4
 
 
-class Cell:
+class Tile:
 
-    def __init__(self, x=0, y=0, cell_type=None):
+    def __init__(self, x=0, y=0, tile_type=None):
         self.x = x
         self.y = y
-        self.type = cell_type
+        self.type = tile_type
 
 
 class Labyrinth:
@@ -28,11 +28,11 @@ class Labyrinth:
         :type nb_row: int
         :param nb_col: int
         :param maze: Map of the labyrinth
-        :type maze: list of Cell
+        :type maze: list of Tile
         :param start: Begin position of player
-        :type start: Cell
+        :type start: Tile
         :param end: End game position
-        :type end: Cell
+        :type end: Tile
         """
         self.nb_row = nb_row
         self.nb_col = nb_col
@@ -48,13 +48,13 @@ class Labyrinth:
         :return:
         """
         if char == ' ':
-            return CellType.HALL
+            return TileType.HALL
         elif char == '#':
-            return CellType.WALL
+            return TileType.WALL
         elif char == 'A':
-            return CellType.START
+            return TileType.START
         elif char == "B":
-            return CellType.END
+            return TileType.END
         else:
             raise Exception("Unknown tiles type")
 
@@ -63,7 +63,7 @@ class Labyrinth:
             content = f.read().splitlines()
         self.nb_row = len(content)
         self.nb_col = len(content[0])
-        self.mazeMap = [Cell(x=j, y=i, cell_type=self.parse(col)) for i, line in enumerate(content) for j, col in
+        self.mazeMap = [Tile(x=j, y=i, tile_type=self.parse(col)) for i, line in enumerate(content) for j, col in
                         enumerate(line)]
-        self.start = [a for a in self.mazeMap if a.type == CellType.START].pop()
-        self.end = [a for a in self.mazeMap if a.type == CellType.END].pop()
+        self.start = [a for a in self.mazeMap if a.type == TileType.START].pop()
+        self.end = [a for a in self.mazeMap if a.type == TileType.END].pop()

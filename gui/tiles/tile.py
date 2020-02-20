@@ -11,7 +11,7 @@ from gui.images.spritesheet import SpriteSheet
 
 
 class Tile(pygame.sprite.Sprite):
-    """ Cell of the maze """
+    """ Tile of the maze """
     rect: pygame.Rect
 
     @property
@@ -23,7 +23,7 @@ class Tile(pygame.sprite.Sprite):
         raise NotImplemented()
 
     def __init__(self):
-        """ Cell constructor """
+        """ Tile constructor """
         super().__init__()
 
         self.loader = ResourceLoader()
