@@ -1,4 +1,4 @@
-from Singleton import Singleton
+from common.Singleton import Singleton
 from gui.resource import *
 from gui.images.spritesheet import SpriteSheet
 
