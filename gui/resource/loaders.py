@@ -10,5 +10,6 @@ class ResourceLoader(metaclass=Singleton):
 
     def __init__(self):
         self.SHEET_PLAYER = SpriteSheet(SHEET_PLAYER_PATH)
+        self.SHEET_GUARDIAN = SpriteSheet(SHEET_GUARDIAN_PATH)
         self.SHEET_FLOOR = SpriteSheet(SHEET_FLOOR_PATH)
         self.SHEET_WALL = SpriteSheet(SHEET_WALL_PATH)

@@ -15,6 +15,10 @@ class Level:
 
     _labyrinth: Labyrinth
 
+    @property
+    def guardian(self):
+        raise NotImplemented
+
     """
          Lists of sprites used in all levels. 
     """
@@ -31,24 +35,22 @@ class Level:
 
         # Go through the array above and add platforms
         for tile in self._labyrinth.mazeMap:
-
             if tile.type == TileType.WALL:
-                tile_gui = Wall()
+                tile_gui = Wall(tile)
             elif tile.type == TileType.HALL:
-                tile_gui = Floor()
+                tile_gui = Floor(tile)
             elif tile.type == TileType.START:
-                tile_gui = Floor(floor_type=FloorType.START)
+                tile_gui = Floor(tile,floor_type=FloorType.START)
                 self.start = tile_gui
             elif tile.type == TileType.END:
-                tile_gui = Floor(floor_type=FloorType.END)
+                tile_gui = Floor(tile,floor_type=FloorType.END)
                 self.end = tile_gui
             else:
                 continue
-            tile_gui.rect.x = tile.x * BLOCK_SIZE
-            tile_gui.rect.y = tile.y * BLOCK_SIZE
+
             self.tile_list.add(tile_gui)
 
-    # Update everythign on this level
+    # Update everything on this level
     def update(self):
         """ Update everything in this level."""
         self.tile_list.update()

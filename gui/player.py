@@ -2,26 +2,18 @@ import pygame
 from termcolor import colored
 
 from gui import BLOCK_SIZE
-from gui.images.sprite import Sprite
-from gui.resource.loaders import ResourceLoader
+from gui.tiles.character import Character, CharacterType
 from gui.tiles.wall import Wall
 
-MACGYVER = Sprite(0, 0, 43, 32)
 
-
-class Player(pygame.sprite.Sprite):
+class Player(Character):
     rect: pygame.Rect
 
-    def __init__(self):
-        super().__init__()
-
-        self.loader = ResourceLoader()
+    def __init__(self, tile):
+        super().__init__(tile, CharacterType.PLAYER)
 
         self.change_y = 0
         self.change_x = 0
-        self.image = self.loader.SHEET_PLAYER.get_image_from_sprite(MACGYVER)
-        self.image = pygame.transform.scale(self.image, (BLOCK_SIZE, BLOCK_SIZE))
-        self.rect = self.image.get_rect()
 
     def update(self):
         self.rect.x += self.change_x

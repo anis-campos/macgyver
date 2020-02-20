@@ -3,6 +3,7 @@ from ctypes import windll, Structure, c_long, byref  # windows only
 import pygame
 
 from gui import SCREEN_HEIGHT, SCREEN_WIDTH
+from gui.guardian import Guardian
 from gui.level.level01 import Level01
 from gui.player import Player
 
@@ -40,17 +41,17 @@ def main():
 
     pygame.display.set_caption("Platformer with sprite sheets")
 
-    # Create the player
-    player = Player()
-
     # Set the current level
     current_level = Level01()
 
+    # Create the player
+    player = Player(current_level.start.tile)
+
+    guardian = Guardian(current_level.guardian)
+
     active_sprite_list = pygame.sprite.Group()
 
-    player.rect = current_level.start.rect.copy()
-
-    active_sprite_list.add(player)
+    active_sprite_list.add(player, guardian)
 
     # Loop until the user clicks the close button.
     done = False

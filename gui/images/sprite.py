@@ -1,5 +1,5 @@
 class Sprite:
-    def __init__(self, x: int, y: int, height: int, width: int):
+    def __init__(self, x: int, y: int, width: int, height: int):
         """
         :param x: x position corner top right
         :param y: y position corner top right
