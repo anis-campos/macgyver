@@ -1,8 +1,7 @@
 import pygame
 
-from gui import constants
-from gui.constants import BLOCK_SIZE
-from gui.level import Level_01
+from gui import BLOCK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH
+from gui.level.level01 import Level01
 from gui.player import Player
 
 from ctypes import windll, Structure, c_long, byref  # windows only
@@ -34,7 +33,7 @@ def main():
     pygame.init()
 
     # Set the height and width of the screen
-    size = [constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT]
+    size = [SCREEN_WIDTH, SCREEN_HEIGHT]
     screen = pygame.display.set_mode(size)
 
     onTop(pygame.display.get_wm_info()['window'])
@@ -45,7 +44,7 @@ def main():
     player = Player()
 
     # Set the current level
-    current_level = Level_01()
+    current_level = Level01()
 
     active_sprite_list = pygame.sprite.Group()
 
@@ -81,16 +80,13 @@ def main():
         if pressed_keys[pygame.K_DOWN]:
             player.go_down()
 
-
-
         # Update the player.
         active_sprite_list.update()
 
         # Update items in the level
         current_level.update()
 
-        collisionHandler(current_level, player)
-
+        collision_handler(current_level, player)
 
         # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
         current_level.draw(screen)
@@ -109,7 +105,7 @@ def main():
     pygame.quit()
 
 
-def collisionHandler(current_level, player):
+def collision_handler(current_level, player):
     block_hit_list = pygame.sprite.spritecollide(player, current_level.walls, False)
     if len(block_hit_list) > 0:
         player.hit_wall(block_hit_list[0])

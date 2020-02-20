@@ -1,10 +1,11 @@
 import pygame
 
-from gui.cell import Wall
-from gui.constants import BLOCK_SIZE
-from gui.loaders import ResourceLoader
-from gui.sprite import Sprite
+from gui import BLOCK_SIZE
+from gui.resource.loaders import ResourceLoader
+from gui.images.sprite import Sprite
 from termcolor import colored
+
+from gui.tiles.wall import Wall
 
 MACGYVER = Sprite(0, 0, 43, 32)
 

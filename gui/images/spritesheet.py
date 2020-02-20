@@ -1,13 +1,13 @@
 import pygame
 
-from gui import constants
-from gui.sprite import Sprite
+from gui import BLACK
+from gui.images.sprite import Sprite
 
 
 class SpriteSheet(object):
     """ Class used to grab images out of a sprite sheet. """
 
-    def __init__(self, file_name, color=constants.BLACK):
+    def __init__(self, file_name, color=BLACK):
         """ Constructor. Pass in the file name of the sprite sheet.
         :param color: Transparency color, assuming black
         :type color: object

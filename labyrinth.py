@@ -3,7 +3,7 @@ import enum
 
 class CellType(enum.Enum):
     """
-    Enum representing type of cell
+    Enum representing type of tiles
     """
     WALL = 1
     HALL = 2
@@ -56,7 +56,7 @@ class Labyrinth:
         elif char == "B":
             return CellType.END
         else:
-            raise Exception("Unknown cell type")
+            raise Exception("Unknown tiles type")
 
     def load(self, file_name: str):
         with open(file_name) as f:
