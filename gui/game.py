@@ -1,5 +1,4 @@
 import random
-from ctypes import windll, Structure, c_long, byref  # windows only
 from typing import List
 
 import pygame
@@ -10,28 +9,8 @@ from gui.level.level import Level
 from gui.level.level01 import Level01
 from gui.player import Player
 from gui.tiles.item import Item, ItemType
+from gui.window_specific import window_on_top
 from model.labyrinth import Tile
-
-
-class RECT(Structure):
-    _fields_ = [
-        ('left', c_long),
-        ('top', c_long),
-        ('right', c_long),
-        ('bottom', c_long),
-    ]
-
-    def width(self):  return self.right - self.left
-
-    def height(self): return self.bottom - self.top
-
-
-def onTop(window):
-    SetWindowPos = windll.user32.SetWindowPos
-    GetWindowRect = windll.user32.GetWindowRect
-    rc = RECT()
-    GetWindowRect(window, byref(rc))
-    SetWindowPos(window, -1, rc.left, rc.top, 0, 0, 0x0001)
 
 
 def main():
@@ -42,7 +21,7 @@ def main():
     size = [SCREEN_WIDTH, SCREEN_HEIGHT]
     screen = pygame.display.set_mode(size)
 
-    onTop(pygame.display.get_wm_info()['window'])
+    window_on_top(pygame.display.get_wm_info()['window'])
 
     pygame.display.set_caption("Platformer with sprite sheets")
 
