@@ -3,7 +3,7 @@ from gui.level.level import Level
 from gui.tiles.floor import Floor
 from gui.tiles.floor_type import FloorType
 from gui.tiles.wall import Wall
-from labyrinth import Labyrinth, CellType
+from model.labyrinth import Labyrinth, CellType
 
 
 class Level01(Level):

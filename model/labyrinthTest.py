@@ -1,5 +1,5 @@
 import unittest
-from labyrinth import Labyrinth
+from model.labyrinth import Labyrinth
 
 
 class LabyrinthTestCase(unittest.TestCase):
