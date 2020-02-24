@@ -23,10 +23,7 @@ class Game:
         # Set the current level
         self.current_level: Level = Level01()
         # Create the player
-        # self.player = Player(self.current_level.start.tile)
-        self.player = Player(Tile(self.current_level.guardian.x, self.current_level.guardian.y + 2))
-        self.player.items = [ItemType.ETHER, ItemType.PLASTIC_PIPE, ItemType.NEEDLE]
-
+        self.player = Player(self.current_level.start.tile)
         self.guardian = Guardian(self.current_level.guardian)
 
         self.characters = pygame.sprite.Group()
