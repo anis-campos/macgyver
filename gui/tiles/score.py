@@ -1,6 +1,7 @@
 import pygame
 
 from gui import WHITE, BLOCK_SIZE, BLACK
+from gui.game_state import GameState
 from gui.player import Player
 
 
@@ -21,16 +22,26 @@ class Score(pygame.sprite.Sprite):
         text_rect.topleft = (x, y)
         self.image.blit(text_surface, text_rect)
 
-    def update(self, *args):
+    def update(self, state: GameState):
         self.image.fill(BLACK)
         self.draw_text('Player Score:', 26, 10, 10)
-        items = [item.name for item in self._player.items]
-        self.draw_text('Items : {}'.format(items), 18, 15, 45)
+        if len(self._player.items) < 3:
+            items = [item.name for item in self._player.items]
+            self.draw_text('Items : {}'.format(items), 18, 15, 45)
+        else:
+            self.draw_text('Items : {}'.format('WEAPON'), 18, 15, 45)
         self.draw_text('Steps : {}'.format(self._player.steps), 18, 15, 65)
 
         if len(self._player.items) == 0:
             self.draw_text('MacGyver need you help !', 20, 200, 50)
             self.draw_text('Find the 3 pieces of the tool and take down the guardian !', 20, 200, 70)
 
+        if state == GameState.HAVE_WEAPON:
+            self.draw_text('You have a weapon', 20, 200, 50)
+            self.draw_text('YOu can take down the guardian!', 20, 200, 70)
+
+        if state == GameState.GUARDIAN_DOWN:
+            self.draw_text('The guardian is down', 20, 200, 50)
+            self.draw_text('YOu can escape!', 20, 200, 70)
 # Todo : add to the score :
 # - Time

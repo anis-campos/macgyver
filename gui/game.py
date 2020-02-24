@@ -5,10 +5,13 @@ import pygame
 from termcolor import colored
 
 from gui import BLOCK_SIZE
+from gui.game_state import GameState
 from gui.guardian import Guardian
 from gui.level.level import Level
 from gui.level.level01 import Level01
 from gui.player import Player
+from gui.tiles.end_level import EndLevel
+from gui.tiles.game_over import GameOver
 from gui.tiles.item import Item, ItemType
 from gui.tiles.score import Score
 from model.labyrinth import Tile
@@ -20,8 +23,12 @@ class Game:
         # Set the current level
         self.current_level: Level = Level01()
         # Create the player
-        self.player = Player(self.current_level.start.tile)
+        # self.player = Player(self.current_level.start.tile)
+        self.player = Player(Tile(self.current_level.guardian.x, self.current_level.guardian.y + 2))
+        self.player.items = [ItemType.ETHER, ItemType.PLASTIC_PIPE, ItemType.NEEDLE]
+
         self.guardian = Guardian(self.current_level.guardian)
+
         self.characters = pygame.sprite.Group()
         self.items = pygame.sprite.Group()
         self.item_tiles: List[Tile] = [tile_gui.tile for tile_gui in random.sample(self.current_level.floors, 3)]
@@ -35,6 +42,13 @@ class Game:
         self.score = Score(self.player, self.current_level.width * BLOCK_SIZE, self.current_level.height * BLOCK_SIZE)
         self.gui = pygame.sprite.Group()
         self.gui.add(self.score)
+        self.state = GameState.LOOKING_FOR_ITEMS
+
+        self.game_over = pygame.sprite.Group()
+        self.game_over.add(GameOver(self.current_level.width * BLOCK_SIZE, self.current_level.height * BLOCK_SIZE))
+
+        self.win = pygame.sprite.Group()
+        self.win.add(EndLevel(self.current_level.width * BLOCK_SIZE, self.current_level.height * BLOCK_SIZE))
 
     def collision_handler(self):
         hit_wall_list = [wall for wall in self.current_level.walls if wall.tile == self.player.next_tile()]
@@ -42,9 +56,14 @@ class Game:
             print(colored('player hit wall at  {}'.format(wall), 'red'))
             self.player.stop()
 
-    def end_game(self):
+    def facing_guardian(self):
         if abs(self.player.tile.x - self.guardian.tile.x) + abs(self.player.tile.y - self.guardian.tile.y) == 1:
-            print("game over")
+            if len(self.player.items) == 3:
+                print("Guardian is down !")
+                self.characters.remove(self.guardian)
+                self.state = GameState.GUARDIAN_DOWN
+            else:
+                self.state = GameState.LOOSE
 
     def item_detection(self):
         block_hit_list: List[Item] = pygame.sprite.spritecollide(self.player, self.items, False)
@@ -73,38 +92,49 @@ class Game:
                     if event.key in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN]:
                         self.player.stop()
 
-            pressed_keys = pygame.key.get_pressed()
+            if self.state in [GameState.LOOKING_FOR_ITEMS, GameState.HAVE_WEAPON, GameState.GUARDIAN_DOWN]:
 
-            if pressed_keys[pygame.K_LEFT]:
-                self.player.go_left()
-            if pressed_keys[pygame.K_RIGHT]:
-                self.player.go_right()
-            if pressed_keys[pygame.K_UP]:
-                self.player.go_up()
-            if pressed_keys[pygame.K_DOWN]:
-                self.player.go_down()
+                pressed_keys = pygame.key.get_pressed()
 
-            self.collision_handler()
-            self.out_of_game()
+                if pressed_keys[pygame.K_LEFT]:
+                    self.player.go_left()
+                if pressed_keys[pygame.K_RIGHT]:
+                    self.player.go_right()
+                if pressed_keys[pygame.K_UP]:
+                    self.player.go_up()
+                if pressed_keys[pygame.K_DOWN]:
+                    self.player.go_down()
 
-            self.characters.update()
-            self.current_level.update()
-            self.score.update()
+                self.collision_handler()
+                self.out_of_game()
 
-            self.end_game()
+                self.item_detection()
 
-            self.item_detection()
+                self.characters.update()
+                self.current_level.update()
+                self.score.update(self.state)
 
-            # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
-            self.current_level.draw(screen)
-            self.items.draw(screen)
-            self.characters.draw(screen)
-            self.gui.draw(screen)
+                if self.state != GameState.GUARDIAN_DOWN:
+                    self.facing_guardian()
+                else:
+                    self.end_game()
 
-            # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
+                self.current_level.draw(screen)
+                self.items.draw(screen)
+                self.characters.draw(screen)
+                self.gui.draw(screen)
+
+            elif self.state == GameState.LOOSE:
+                self.game_over.draw(screen)
+            elif self.state == GameState.WIN:
+                self.win.draw(screen)
 
             # Go ahead and update the screen with what we've drawn.
             pygame.display.flip()
 
             # pause the game loop to limit speed
             pygame.time.delay(100)
+
+    def end_game(self):
+        if self.player.tile == self.current_level.end.tile:
+            self.state = GameState.WIN
