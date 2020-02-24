@@ -18,6 +18,11 @@ class Tile:
         self.y = y
         self.type = tile_type
 
+    def __eq__(self, o: object) -> bool:
+        if isinstance(o, Tile):
+            return o.y == self.y and o.x == self.x
+        return super().__eq__(o)
+
 
 class Labyrinth:
 
