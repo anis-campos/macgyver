@@ -27,9 +27,10 @@ class Score(pygame.sprite.Sprite):
         items = [item.name for item in self._player.items]
         self.draw_text('Items : {}'.format(items), 18, 15, 45)
         self.draw_text('Steps : {}'.format(self._player.steps), 18, 15, 65)
-        self.draw_text('MacGyver need you help !',20, 200, 50)
-        self.draw_text('Find the 3 pieces of the tool and take down the guardian !', 20, 200, 70)
 
-# Define here a score screen where we can see
+        if len(self._player.items) == 0:
+            self.draw_text('MacGyver need you help !', 20, 200, 50)
+            self.draw_text('Find the 3 pieces of the tool and take down the guardian !', 20, 200, 70)
+
+# Todo : add to the score :
 # - Time
-# - Description of what to do
