@@ -35,6 +35,8 @@ class TileGui(pygame.sprite.Sprite):
         # Grab the image for this tiles
         self.image = self.sprite_sheet.get_image_from_sprite(self.sprite)
         self.image = pygame.transform.scale(self.image, (BLOCK_SIZE, BLOCK_SIZE))
+
+        #setting tile position
         self.rect = self.image.get_rect()
         self.rect.x = tile.x * BLOCK_SIZE
         self.rect.y = tile.y * BLOCK_SIZE

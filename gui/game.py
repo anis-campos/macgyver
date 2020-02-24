@@ -2,12 +2,15 @@ import random
 from typing import List
 
 import pygame
+from termcolor import colored
 
+from gui import BLOCK_SIZE
 from gui.guardian import Guardian
 from gui.level.level import Level
 from gui.level.level01 import Level01
 from gui.player import Player
 from gui.tiles.item import Item, ItemType
+from gui.tiles.score import Score
 from model.labyrinth import Tile
 
 
@@ -29,13 +32,15 @@ class Game:
         self.characters.add(self.guardian, self.player)
         # Loop until the user clicks the close button.
         self.done = False
-        # Used to manage how fast the screen updates
-        self.clock = pygame.time.Clock()
+        self.score = Score(self.player, self.current_level.width * BLOCK_SIZE, self.current_level.height * BLOCK_SIZE)
+        self.gui = pygame.sprite.Group()
+        self.gui.add(self.score)
 
     def collision_handler(self):
-        block_hit_list = pygame.sprite.spritecollide(self.player, self.current_level.walls, False)
-        if len(block_hit_list) > 0:
-            self.player.hit_wall(block_hit_list[0])
+        hit_wall_list = [wall for wall in self.current_level.walls if wall.tile == self.player.next_tile()]
+        for wall in hit_wall_list:
+            print(colored('player hit wall at  {}'.format(wall), 'red'))
+            self.player.stop()
 
     def end_game(self):
         if abs(self.player.tile.x - self.guardian.tile.x) + abs(self.player.tile.y - self.guardian.tile.y) == 1:
@@ -60,7 +65,7 @@ class Game:
 
         # -------- Main Program Loop -----------
         while not self.done:
-            pygame.time.delay(100)
+
             for event in pygame.event.get():  # User did something
                 if event.type == pygame.QUIT:  # If user clicked close
                     self.done = True  # Flag that we are done so we exit this loop
@@ -79,26 +84,27 @@ class Game:
             if pressed_keys[pygame.K_DOWN]:
                 self.player.go_down()
 
+            self.collision_handler()
             self.out_of_game()
 
             self.characters.update()
             self.current_level.update()
+            self.score.update()
 
             self.end_game()
 
             self.item_detection()
 
-            self.collision_handler()
-
             # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
             self.current_level.draw(screen)
             self.items.draw(screen)
             self.characters.draw(screen)
+            self.gui.draw(screen)
 
             # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
 
-            # Limit to 60 frames per second
-            self.clock.tick(60)
-
             # Go ahead and update the screen with what we've drawn.
             pygame.display.flip()
+
+            # pause the game loop to limit speed
+            pygame.time.delay(100)
